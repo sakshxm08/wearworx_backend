@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-
+const cors = require("cors");
 // Routes Imports
 const cartRoutes = require("./routes/cart");
 const stashRoutes = require("./routes/stash");
@@ -10,15 +10,34 @@ const userRoutes = require("./routes/user");
 
 // Express App
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT;
 const MONGO_URI = process.env.MONGO_URI;
 
 // Middleware
 // For the requests
 app.use(express.json());
-// To get the type of request
+app.use(cors());
+
 app.use((req, res, next) => {
-  console.log(req.path, req.method);
+  const corsWhitelist = [
+    "https://wearworx.sakshxm08.in",
+    "https://wearworx.netlify.app",
+    "http://localhost:3000",
+  ];
+
+  if (corsWhitelist.includes(req.headers.origin)) {
+    res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
+
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-type, Accept, Authorization"
+    );
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+    );
+  }
+
   next();
 });
 
@@ -33,8 +52,6 @@ mongoose
   .connect(MONGO_URI)
   .then(() => {
     // Listen for requests
-    app.listen(PORT, () => {
-      console.log("Connected to DB and listening on port", PORT);
-    });
+    app.listen(PORT);
   })
   .catch((err) => console.log(err));
