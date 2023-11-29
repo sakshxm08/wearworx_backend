@@ -15,7 +15,6 @@ const getAllFromStore = async (req, res) => {
 // GET a unique item from store
 const getItemFromStore = async (req, res) => {
   const id = req.params.id;
-  console.log(req.params);
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ error: "Invalid item id" });
   }
@@ -95,6 +94,39 @@ const addCategory = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+
+// SEARCH items
+const searchProducts = async (req, res) => {
+  try {
+    const query = req.params.query;
+    const items = await store.find({
+      $or: [
+        { name: { $regex: query, $options: "i" } },
+        { category: { $regex: query, $options: "i" } },
+        { keywords: { $regex: query, $options: "i" } },
+      ],
+    });
+
+    res.status(200).json(items);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+// SEARCH categories
+const searchCategories = async (req, res) => {
+  try {
+    const query = req.params.query;
+    const items = await categories.find({
+      name: { $regex: query, $options: "i" },
+    });
+
+    res.status(200).json(items);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
 module.exports = {
   addToStore,
   getAllFromStore,
@@ -104,4 +136,6 @@ module.exports = {
   updateInStore,
   getCategories,
   addCategory,
+  searchProducts,
+  searchCategories,
 };

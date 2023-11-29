@@ -8,6 +8,8 @@ const {
   updateInStore,
   getCategories,
   addCategory,
+  searchProducts,
+  searchCategories,
 } = require("../controllers/storeController");
 
 const router = express.Router();
@@ -35,4 +37,11 @@ router.get("/categories", getCategories);
 
 // Add category
 router.post("/categories", addCategory);
+
+// Search Products
+router.get("/search/product/:query", searchProducts);
+
+// Search Categories
+router.get("/search/category/:query", searchCategories);
+
 module.exports = router;
