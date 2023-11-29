@@ -10,7 +10,7 @@ const userRoutes = require("./routes/user");
 
 // Express App
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 4000;
 const MONGO_URI = process.env.MONGO_URI;
 
 // Middleware
