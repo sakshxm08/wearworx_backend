@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 // Routes Imports
@@ -15,6 +16,8 @@ const MONGO_URI = process.env.MONGO_URI;
 
 // Middleware
 // For the requests
+app.use(bodyParser.json({ limit: "10mb" }));
+app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
 app.use(express.json());
 app.use(cors());
 
